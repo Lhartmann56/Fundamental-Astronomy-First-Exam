@@ -86,7 +86,7 @@ y1 = [-58.86174117642695, -58.8582744676107, -58.85478559561711, -56.75184521313
 z1 = [ 0.006477038631585696, 0.006476657161271048, 0.006476273252160792, 0.006244869528365741, 0.0060419264825281455, 0.0059117034614445335]
 
 
-ax.scatter(x1,y1,z1, color='orange', s=5)     
+ax.scatter(x1,y1,z1, color='green', s=5)     
 ax.set_xlabel('x (AU)')
 ax.set_ylabel('y (AU)')
 ax.set_zlabel('z (AU)')
@@ -150,9 +150,9 @@ plt.ylabel('Momentum')
 plt.xlabel('Time')
 plt.rcParams['legend.fontsize']= 10
 plt.legend(loc="upper right")
-plt.grid(b=True, which='major', color=(0,0,0), linestyle='-')
+plt.grid(visible=True, which='major', color=(0,0,0), linestyle='-')
 plt.minorticks_on()
-plt.grid(b=True, which='minor', color=(0.2,0.2,0.2), linestyle='-', alpha=0.2)
+plt.grid(visible=True, which='minor', color=(0.2,0.2,0.2), linestyle='-', alpha=0.2)
 #graph momentum in z-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 plt.figure(figsize=(10,10))
 plt.axhline(promedio_momentum_z, linewidth=2, color="red", label='Average of the momentum' )
@@ -162,9 +162,9 @@ plt.ylabel('Momentum')
 plt.xlabel('Time')
 plt.rcParams['legend.fontsize']= 10
 plt.legend(loc="upper right")
-plt.grid(b=True, which='major', color=(0,0,0), linestyle='-')
+plt.grid(visible=True, which='major', color=(0,0,0), linestyle='-')
 plt.minorticks_on()
-plt.grid(b=True, which='minor', color=(0.2,0.2,0.2), linestyle='-', alpha=0.2)
+plt.grid(visible=True, which='minor', color=(0.2,0.2,0.2), linestyle='-', alpha=0.2)
 
 
 plt.show()
