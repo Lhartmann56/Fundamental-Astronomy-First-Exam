@@ -78,7 +78,7 @@ for t in times:
     z = r*sin(iota)*sin(phi)
     ax.scatter(x,y,z, color='red', s=30)
 
-#coordinates of asteroid
+#coordinates of asteroid-------------------------------------------------------------------------------------------------------------------------------------------------------------
 t1 = ['2023-07-09T10:00:00', '2023-07-09T12:00:00', '2023-07-09T14:00:00', '2023-08-03T11:00:00', '2023-08-15T08:00:00', '2023-08-21T09:00:00']
 t = Time(t1, format='isot', scale='utc')
 x1 = [-136.5637561083746, -136.52944516728272, -136.49508281581126, -123.8254221225029, -115.92607005859432,  -111.38702385389293]
@@ -101,8 +101,18 @@ vz = np.zeros(len(t1))
 #radius
 for i in range(len(t1)):
     r[i] = sqrt((x1[i]**2)+(y1[i]**2)+(z1[i]**2))
-
-#velocity ----------------------------------------------------------------------------------------------------------------------------------------------------------
+#graph asteroid ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+plt.figure(figsize=(10,10))
+plt.scatter(t[:].jd, r[:], label='points of radius Vs time')
+plt.title('R Vs T')
+plt.ylabel('R (UA)')
+plt.xlabel('Time')
+plt.rcParams['legend.fontsize']= 10
+plt.legend(loc="upper right")
+plt.grid(b=True, which='major', color=(0,0,0), linestyle='-')
+plt.minorticks_on()
+plt.grid(b=True, which='minor', color=(0.2,0.2,0.2), linestyle='-', alpha=0.2)
+#velocity ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 h = t[len(t1)-1].jd-t[len(t1)-2].jd
 vx[len(t1)-1] = (x1[len(t1)-1]-x1[len(t1)-2])/h
@@ -120,28 +130,57 @@ for i in range(len(t1)-1):
 
 
 momentum = np.zeros(len(t1))
+momentum_x = np.zeros(len(t1))
+momentum_y = np.zeros(len(t1))
 momentum_z = np.zeros(len(t1))
 for i in range(len(t1)):
-    momentum[i] = sqrt(((y1[i]*vz[i]-z1[i]*vy[i])**2)+((z1[i]*vx[i]-x1[i]*vz[i])**2)+((y1[i]*vx[i]-x1[i]*vy[i])**2))
+    #x component of momentum------------------------------------------------------------------------------------------------------------------------
+    momentum_x[i] = y1[i]*vz[i]-z1[i]*vy[i]
+    #y component of momentum------------------------------------------------------------------------------------------------------------------------
+    momentum_y[i] = z1[i]*vx[i]-x1[i]*vz[i]
     #z component of momentum------------------------------------------------------------------------------------------------------------------------
-    momentum_z[i] = y1[i]*vx[i]-x1[i]*vy[i]
+    momentum_z[i] = x1[i]*vy[i]-y1[i]*vx[i]
+    #z total momentum-------------------------------------------------------------------------------------------------------------------------------
+    momentum[i] = sqrt(((momentum_x[i])**2)+((momentum_y[i])**2)+((momentum_z[i])**2))
 t1 = ['2023-07-09T10:00:00', '2023-07-09T12:00:00', '2023-08-03T11:00:00', '2023-08-15T08:00:00', '2023-08-21T09:00:00']
 nt = Time(t1, format='isot', scale='utc')
 
 momentum = np.delete(momentum,2)
+momentum_x = np.delete(momentum_x,2)
+momentum_y = np.delete(momentum_y,2)
 momentum_z = np.delete(momentum_z,2)
 
 promedio_momentum = 0
+promedio_momentum_x = 0
+promedio_momentum_y = 0
 promedio_momentum_z = 0
+
 N = len(momentum)
+
 for i in range(len(momentum)):
     promedio_momentum = promedio_momentum + momentum[i]
+    promedio_momentum_x = promedio_momentum_x + momentum_z[i]
+    promedio_momentum_y = promedio_momentum_y + momentum_z[i]
     promedio_momentum_z = promedio_momentum_z + momentum_z[i]
+
 promedio_momentum = promedio_momentum/N
+promedio_momentum_x = promedio_momentum_x/N
+promedio_momentum_y = promedio_momentum_y/N
 promedio_momentum_z = promedio_momentum_z/N
 #inclination-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-iota_a = arccos(promedio_momentum_z/promedio_momentum_z)
-#graph momentum -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+iota_a = arccos(promedio_momentum_z/promedio_momentum)
+print('Inclination Angle---------------------------------------------')
+print(iota_a*180/pi)
+#N vector ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Nvector_a = sqrt((promedio_momentum_x**2)+(promedio_momentum_y**2))
+print('N vector magnitude---------------------------------------------')
+print(Nvector_a)
+#OMEGA angle------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+OMEGA_a = arccos(-promedio_momentum_y/Nvector_a)
+print('OMEGA ANGLE --------------------------------------------')
+print(OMEGA_a*180/pi)
+#graph momentum ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 plt.figure(figsize=(10,10))
 plt.axhline(promedio_momentum, linewidth=2, color="red", label='Average of the momentum' )
 plt.scatter(nt[:].jd, momentum[:], label='Momentum in each time')
